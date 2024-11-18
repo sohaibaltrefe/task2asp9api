@@ -24,34 +24,34 @@ namespace task2.Controllers
         [HttpGet("GetAll")]
         public async Task< IActionResult >GetAll()
         {
-            var employees = await context.products.ToListAsync();
-            if (employees is null)
+            var products = await context.products.ToListAsync();
+            if (products is null)
             {
-                return NotFound("Employees not found");
+                return NotFound("products not found");
             }
-            var empDto = employees.Adapt<List<GetAllProductDto>>();
+            var productsDto = products.Adapt<List<GetAllProductDto>>();
 
-            return Ok(empDto);
+            return Ok(productsDto);
         }
 
         [HttpGet("Details")]
         public async Task< IActionResult> GetById(int id)
         {
-            var employee = await  context.products.FindAsync(id);
+            var product = await  context.products.FindAsync(id);
                
-            if (employee is null)
+            if (product is null)
             {
-                return NotFound("Employee not found");
+                return NotFound("product not found");
             }
 
-            var empDto = employee.Adapt<GetByIdProductDto>();
-            return Ok(empDto);
+            var productsDto = product.Adapt<GetByIdProductDto>();
+            return Ok(productsDto);
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create(CreateProductDto empDto, [FromServices] IValidator<CreateProductDto> validator)
+        public async Task<IActionResult> Create(CreateProductDto productsDto, [FromServices] IValidator<CreateProductDto> validator)
         {
-            var validationResult = await validator.ValidateAsync(empDto);
+            var validationResult = await validator.ValidateAsync(productsDto);
 
             if (!validationResult.IsValid)
             {
@@ -63,7 +63,7 @@ namespace task2.Controllers
                 return ValidationProblem(modelstate);
             }
 
-            var product = empDto.Adapt<Product>();
+            var product = productsDto.Adapt<Product>();
           await  context.products.AddAsync(product);
             await context.SaveChangesAsync(); 
 
